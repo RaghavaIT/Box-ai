@@ -4,19 +4,20 @@ This project provides a Python pipeline to ingest documents from Box into Interl
 It extracts text from Box files (PDF, DOCX, TXT), cleans them, and pushes them into Interlinked using its Knowledge APIs.
 ## 📂 Project Structure
 
-box.ai/
-│── .env # BOX + Interlinked API keys
-│── requirements.txt # dependencies
-│── config.py # loads env variables
-│── box_client.py # Box API connector
-│── scraper.py # extract text from Box files
+box.AI/
+│── .env                  # BOX + Interlinked API keys
+│── requirements.txt      # dependencies
+│── config.py             # loads env variables
+│── box_client.py         # Box API connector
+│── scraper.py            # extract text from Box files
 │── interlinked_client.py # send data to Interlinked Knowledge API
-│── ingestion.py # orchestrates pipeline
+│── ingestion.py          # orchestrates pipeline
 │
 └── tests/
-├── test_box_client.py
-├── test_scraper.py
-├── test_ingestion.py
+    ├── test_box_client.py
+    ├── test_scraper.py
+    ├── test_ingestion.py
+
 
 ⚙️ Setup
 1. Clone the repo
