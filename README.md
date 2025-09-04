@@ -8,7 +8,7 @@ It extracts text from Box files (PDF, DOCX, TXT), cleans them, and pushes them i
 ## 📂 Project Structure
 
 ```
-box_connector/
+box.ai/
 │── .env                  # BOX + Interlinked API keys
 │── requirements.txt      # dependencies
 │── config.py             # loads env variables
