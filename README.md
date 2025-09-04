@@ -1,10 +1,14 @@
-📖 Box-ai
+# Box-ai
 
-This project provides a Python pipeline to ingest documents from Box into Interlinked AI’s Knowledge Base.
-It extracts text from Box files (PDF, DOCX, TXT), cleans them, and pushes them into Interlinked using its Knowledge APIs.
+This project provides a Python pipeline to ingest documents from Box into Interlinked AI’s Knowledge Base.  
+It extracts text from Box files (PDF, DOCX, TXT), cleans them, and pushes them into Interlinked using its Knowledge APIs.  
+
+---
+
 ## 📂 Project Structure
 
-box.AI/
+```
+box_connector/
 │── .env                  # BOX + Interlinked API keys
 │── requirements.txt      # dependencies
 │── config.py             # loads env variables
@@ -17,87 +21,111 @@ box.AI/
     ├── test_box_client.py
     ├── test_scraper.py
     ├── test_ingestion.py
+```
 
+---
 
-⚙️ Setup
-1. Clone the repo
-git clone https://github.com/RaghavaIT/Box-ai.git
-cd Box-ai
+## ⚙️ Setup
 
-2. Create virtual environment
-python -m venv .venv
-# Activate
-source .venv/bin/activate     # Mac/Linux
-.venv\Scripts\activate        # Windows
+1. **Clone the repo**  
+   ```bash
+   git clone https://github.com/RaghavaIT/Box-ai.git
+   cd Box-ai
+   ```
 
-3. Install dependencies
-pip install -r requirements.txt
+2. **Create virtual environment**  
+   ```bash
+   python -m venv .venv
+   # Activate
+   source .venv/bin/activate     # Mac/Linux
+   .venv\Scripts\activate        # Windows
+   ```
 
-4. Configure environment variables
+3. **Install dependencies**  
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Create a .env file in the root directory:
+4. **Configure environment variables**  
+   Create a `.env` file in the root directory:  
+   ```env
+   BOX_CLIENT_ID=your_box_client_id
+   BOX_CLIENT_SECRET=your_box_client_secret
+   BOX_ACCESS_TOKEN=your_box_access_token
+   INTERLINKED_API_KEY=your_interlinked_api_key
+   ```
 
-BOX_CLIENT_ID=your_box_client_id
-BOX_CLIENT_SECRET=your_box_client_secret
-BOX_ACCESS_TOKEN=your_box_access_token
+---
 
-INTERLINKED_API_KEY=your_interlinked_api_key
+## ▶️ Usage
 
-▶️ Usage
-Ingest all files from Box root folder
-python ingestion.py
+- **Ingest all files from Box root folder**  
+  ```bash
+  python ingestion.py
+  ```
 
-Ingest from a specific Box folder
+- **Ingest from a specific folder**  
+  Update the `ingestion.py` file:  
+  ```python
+  if __name__ == "__main__":
+      ingest_box_folder("123456789")  # replace with Box folder ID
+  ```
 
-Update the ingestion.py file:
+---
 
-if __name__ == "__main__":
-    ingest_box_folder("123456789")  # replace with Box folder ID
+## 🧪 Testing
 
-🧪 Testing
-
-Run unit tests:
-
+Run unit tests:  
+```bash
 pytest tests/
+```
 
-🔑 Key Components
+---
 
-box_client.py → Connects to Box API and fetches files.
+## 🔑 Key Components
 
-scraper.py → Extracts and cleans text from PDF/DOCX/TXT.
+- `box_client.py` → Connects to Box API and fetches files.  
+- `scraper.py` → Extracts and cleans text from PDF/DOCX/TXT.  
+- `interlinked_client.py` → Pushes text into Interlinked Knowledge Base (`AI.learn`).  
+- `ingestion.py` → Orchestrates Box → Scraper → Interlinked.  
 
-interlinked_client.py → Pushes text into Interlinked Knowledge Base (AI.learn).
+---
 
-ingestion.py → Orchestrates Box → Scraper → Interlinked.
+## 📌 Notes
 
-📌 Notes
+- Currently supports **PDF, DOCX, TXT**. Extend `scraper.py` for other formats.  
+- Box API requires `client_id`, `client_secret`, and `access_token` → Get from [Box Developer Console](https://app.box.com/developers/console).  
+- Interlinked API requires an **API key** (provided by your team).  
 
-Currently supports PDF, DOCX, TXT. Extend scraper.py for other formats.
+---
 
-Box API requires client_id, client_secret, and access_token → Get from Box Developer Console
-.
+## 📊 Architecture Flow
 
-Interlinked API requires an API key (provided by your team).
-
-📊 Architecture Flow
+```mermaid
 flowchart TD
     A[Box Storage] --> B[Box Client]
     B --> C[Scraper]
     C --> D[Interlinked Client]
     D --> E[Interlinked Knowledge Base]
     E --> F[LLM / Q&A Service]
+```
 
-    ⚠️ **Important Note**
+---
+
+## ⚠️ Important Note
 
 This project is intended for **local development and testing only**.  
 The `.env` file currently stores API keys and tokens in plain text.  
 
 🚫 Do **NOT** use this setup directly in a production environment.  
 
-✅ For production:
-- Store secrets in a secure service like **Azure Key Vault**, **AWS Secrets Manager**, or **Vault by HashiCorp**.
-- Update `config.py` to fetch secrets securely instead of reading from `.env`.
-Sample code for production ready
+✅ For production:  
+- Store secrets in a secure service like **Azure Key Vault**, **AWS Secrets Manager**, or **Vault by HashiCorp**.  
+- Update `config.py` to fetch secrets securely instead of reading from `.env`.  
+
+### Sample code for production-ready `config.py`
+
+```python
 import os
 from dotenv import load_dotenv
 
@@ -105,8 +133,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # For production, fetch secrets from Azure Key Vault
-config.py
------
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 
@@ -132,7 +158,4 @@ class Config:
         cls.INTERLINKED_API_KEY = client.get_secret("Interlinked-Api-Key").value
 
         print("✅ Secrets loaded securely from Azure Key Vault")
-
-
-
-
+```
